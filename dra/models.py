@@ -8,6 +8,9 @@ class Repository(models.Model):
     name = models.CharField(max_length=100)
     public = models.BooleanField(default=False)
 
+    class Meta:
+        verbose_name_plural = 'Repositories'
+
     def __str__(self):
         return '{0} [{1}]'.format(self.name, 'public' if self.public else 'private')
 
