@@ -43,22 +43,24 @@ def token(request):
 
     scope = request.GET.get('scope', None)
     if scope is not None:
-        typ, repo, ops = scope.split(':')
-        if typ == 'repository':
-            pull, push = get_user_repository_permissions(user=user, repository=repo)
-            actions = []
-            if pull:
-                actions.append('pull')
-            if push:
-                actions.append('push')
+        ss = scope.split(':')
+        if len(ss) == 3:
+            typ, repo, ops = ss
+            if typ == 'repository':
+                pull, push = get_user_repository_permissions(user=user, repository=repo)
+                actions = []
+                if pull:
+                    actions.append('pull')
+                if push:
+                    actions.append('push')
 
-            resp['access'] = [
-                    {
-                        'type': typ,
-                        'name': repo,
-                        'actions': actions
-                    }
-                    ]
+                resp['access'] = [
+                        {
+                            'type': typ,
+                            'name': repo,
+                            'actions': actions
+                        }
+                        ]
 
     response = HttpResponse()
     response['Content-type'] = 'application/json'
