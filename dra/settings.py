@@ -115,3 +115,13 @@ try:
     from local_settings import *
 except ImportError:
     pass
+
+import sys
+
+if len(sys.argv) > 1 and sys.argv[1] == 'test':
+    import tempfile
+    RSA_tmpfile = tempfile.NamedTemporaryFile()
+    RSA_KEY = RSA_tmpfile.name
+    del tempfile
+
+del sys
