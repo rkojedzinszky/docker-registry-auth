@@ -40,8 +40,8 @@ class AuthTest(TestCase):
         pub_repo = models.Repository.objects.create(name='public', public=True)
         priv_repo = models.Repository.objects.create(name='private')
 
-        models.RepositoryPermissions.objects.create(repository=pub_repo, group=admin_group, write=True)
-        models.RepositoryPermissions.objects.create(repository=priv_repo, group=admin_group, write=True)
+        models.RepositoryPermissions.objects.create(repository=pub_repo, sgroup=admin_group, write=True)
+        models.RepositoryPermissions.objects.create(repository=priv_repo, sgroup=admin_group, write=True)
 
     def request(self, service=SERVICE, scope='registry:*', username=None, password=None):
         c = Client()

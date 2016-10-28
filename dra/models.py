@@ -19,12 +19,12 @@ class RepositoryPermissions(models.Model):
     possibly with write access """
 
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
-    group = models.ForeignKey(authmodels.Group, on_delete=models.CASCADE)
+    sgroup = models.ForeignKey(authmodels.Group, on_delete=models.CASCADE)
     write = models.BooleanField(default=False)
 
     class Meta:
         unique_together = (
-                ('repository', 'group'),
+                ('repository', 'sgroup'),
                 )
 
     def __str__(self):

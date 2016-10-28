@@ -10,7 +10,7 @@ def get_user_repository_permissions(user, repository):
 
     pull = repository.public
 
-    perm = repository.repositorypermissions_set.filter(group__user=user).first()
+    perm = repository.repositorypermissions_set.filter(sgroup__user=user).first()
     if perm is not None:
         pull = True
         push = perm.write
