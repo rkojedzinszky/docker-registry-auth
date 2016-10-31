@@ -28,4 +28,4 @@ class RepositoryPermissions(models.Model):
                 )
 
     def __str__(self):
-        return '{0}-{1} [{2}]'.format(self.repository, self.group, 'full' if self.write else 'read')
+        return '{0}-{1} [{2}]'.format(self.repository, self.sgroup, 'full' if self.write else 'read')
