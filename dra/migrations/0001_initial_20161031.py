@@ -8,8 +8,6 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    replaces = [(b'dra', '0001_initial'), (b'dra', '0002_rename_groups_to_sgroups'), (b'dra', '0003_auto_20161031_0824'), (b'dra', '0004_data_migrate'), (b'dra', '0005_auto_20161031_0907')]
-
     initial = True
 
     dependencies = [
