@@ -5,7 +5,6 @@ import json
 import socket
 from django.test import TestCase
 from dra import models
-from django.contrib.auth.models import User, Group
 from django.test import Client
 from django.conf import settings
 import subprocess, os
@@ -27,21 +26,21 @@ class AuthTest(TestCase):
         pass
 
     def setUp(self):
-        admin_group = Group.objects.create(name='admin')
-        u1 = User(username=ADMIN_USERNAME, is_active=True)
+        admin_group = models.Group.objects.create(name='admin')
+        u1 = models.Account(username=ADMIN_USERNAME)
         u1.set_password(ADMIN_PASSWORD)
         u1.save()
         u1.groups = [admin_group]
 
-        rouser = User(username=RO_USERNAME, is_active=True)
+        rouser = models.Account(username=RO_USERNAME)
         rouser.set_password(RO_PASSWORD)
         rouser.save()
 
         pub_repo = models.Repository.objects.create(name='public', public=True)
         priv_repo = models.Repository.objects.create(name='private')
 
-        models.RepositoryPermissions.objects.create(repository=pub_repo, sgroup=admin_group, write=True)
-        models.RepositoryPermissions.objects.create(repository=priv_repo, sgroup=admin_group, write=True)
+        models.RepositoryPermissions.objects.create(repository=pub_repo, group=admin_group, write=True)
+        models.RepositoryPermissions.objects.create(repository=priv_repo, group=admin_group, write=True)
 
     def request(self, service=SERVICE, scope='registry:*', username=None, password=None):
         c = Client()

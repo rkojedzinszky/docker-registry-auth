@@ -1,6 +1,6 @@
 from dra import models
 
-def get_user_repository_permissions(user, repository):
+def get_account_repository_permissions(account, repository):
     """ This calculates pull,push rights for a user to a repository """
 
     repository = models.Repository.objects.filter(name=repository).first()
@@ -10,7 +10,7 @@ def get_user_repository_permissions(user, repository):
 
     pull = repository.public
 
-    perm = repository.repositorypermissions_set.filter(sgroup__user=user).first()
+    perm = repository.repositorypermissions_set.filter(group__account=account).first()
     if perm is not None:
         pull = True
         push = perm.write
