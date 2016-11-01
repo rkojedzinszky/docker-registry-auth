@@ -26,11 +26,12 @@ class AuthTest(TestCase):
         pass
 
     def setUp(self):
+        ro_group = models.Group.objects.create(name='ro_group')
         admin_group = models.Group.objects.create(name='admin')
         u1 = models.Account(username=ADMIN_USERNAME)
         u1.set_password(ADMIN_PASSWORD)
         u1.save()
-        u1.groups = [admin_group]
+        u1.groups = [ro_group, admin_group]
 
         rouser = models.Account(username=RO_USERNAME)
         rouser.set_password(RO_PASSWORD)
@@ -39,6 +40,7 @@ class AuthTest(TestCase):
         pub_repo = models.Repository.objects.create(name='public', public=True)
         priv_repo = models.Repository.objects.create(name='private')
 
+        models.RepositoryPermissions.objects.create(repository=pub_repo, group=ro_group, write=False)
         models.RepositoryPermissions.objects.create(repository=pub_repo, group=admin_group, write=True)
         models.RepositoryPermissions.objects.create(repository=priv_repo, group=admin_group, write=True)
 

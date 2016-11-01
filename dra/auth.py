@@ -10,10 +10,10 @@ def get_account_repository_permissions(account, repository):
 
     pull = repository.public
 
-    perm = repository.repositorypermissions_set.filter(group__account=account).first()
-    if perm is not None:
+    f = repository.repositorypermissions_set.filter(group__account=account)
+    if f.exists():
         pull = True
-        push = perm.write
+        push = f.filter(write=True).exists()
     else:
         push = False
 
