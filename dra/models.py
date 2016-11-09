@@ -17,7 +17,7 @@ class Account(models.Model):
     """ Represents a docker account """
     username = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=128)
-    groups = models.ManyToManyField(Group)
+    groups = models.ManyToManyField(Group, blank=True)
 
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
