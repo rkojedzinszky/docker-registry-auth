@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import base64
 import json
 import socket
@@ -31,7 +29,7 @@ class AuthTest(TestCase):
         u1 = models.Account(username=ADMIN_USERNAME)
         u1.set_password(ADMIN_PASSWORD)
         u1.save()
-        u1.groups = [ro_group, admin_group]
+        u1.groups.set([ro_group, admin_group])
 
         rouser = models.Account(username=RO_USERNAME)
         rouser.set_password(RO_PASSWORD)
@@ -48,7 +46,7 @@ class AuthTest(TestCase):
         c = Client()
         extra = {}
         if username and password:
-            extra['HTTP_AUTHORIZATION'] = 'Basic ' + base64.b64encode('{}:{}'.format(username, password))
+            extra['HTTP_AUTHORIZATION'] = 'Basic ' + base64.b64encode('{}:{}'.format(username, password).encode()).decode()
 
         return c.get('/token/', {'service': service, 'scope': scope}, **extra)
 

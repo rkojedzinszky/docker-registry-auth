@@ -6,7 +6,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
 from django.utils.functional import cached_property
 
-class PrivateKey(object):
+class PrivateKey:
     """ This represents a private key used in
     JWT signatures with 'kid' field generation """
     def __init__(self, path):
@@ -30,6 +30,6 @@ class PrivateKey(object):
         hasher = hashlib.sha256()
         hasher.update(der_bytes)
         digest = hasher.digest()
-        b32 = base64.b32encode(digest[0:30])
+        b32 = base64.b32encode(digest[0:30]).decode()
 
         return ':'.join(re.findall('.{4}', b32))

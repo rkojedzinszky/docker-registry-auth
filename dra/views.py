@@ -1,3 +1,4 @@
+import base64
 import socket
 import json
 import time
@@ -22,7 +23,7 @@ def token(request):
     if meth.lower() != 'basic':
         return HttpResponse(status=403)
 
-    user, password = token.strip().decode('base64').split(':')
+    user, password = base64.b64decode(token.strip().encode()).decode().split(':')
 
     account = Account.objects.filter(username=user).first()
     if account is None or not account.check_password(password):
@@ -45,7 +46,7 @@ def token(request):
     if scope is not None:
         ss = scope.split(':')
         if len(ss) == 3:
-            typ, repo, ops = ss
+            typ, repo, _ = ss
             if typ == 'repository':
                 pull, push = get_account_repository_permissions(account=account, repository=repo)
                 actions = []
@@ -73,7 +74,7 @@ def token(request):
             key.key,
             algorithm='RS512',
             headers={'kid':key.public_key_kid},
-            )
+            ).decode()
         }))
 
     return response
