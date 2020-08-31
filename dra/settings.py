@@ -109,7 +109,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-RSA_KEY = 'key.pem'
+RSA_KEY = os.getenv('RSA_KEY', '/data/key.pem')
 
 try:
     from local_settings import *
