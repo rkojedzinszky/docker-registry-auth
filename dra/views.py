@@ -33,7 +33,7 @@ def token(request):
     now = int(time.time())
 
     resp = {
-            'iss': socket.getfqdn(),
+            'iss': settings.DRA_ISS,
             'sub': account.username,
             'aud': service,
             'exp': now + 60,

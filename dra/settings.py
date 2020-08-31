@@ -3,6 +3,7 @@ Django settings for dra project.
 """
 
 import os
+import socket
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -111,6 +112,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 RSA_KEY = os.getenv('RSA_KEY', '/data/key.pem')
 
+DRA_ISS = os.getenv('DRA_ISS', socket.getfqdn())
+
 try:
     from local_settings import *
 except ImportError:
@@ -124,4 +127,5 @@ if len(sys.argv) > 1 and sys.argv[1] == 'test':
     RSA_KEY = RSA_tmpfile.name
     del tempfile
 
+del socket
 del sys
