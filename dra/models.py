@@ -30,7 +30,7 @@ class Account(models.Model):
 
 class Repository(models.Model):
     """ Represents a repository prefix """
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     public = models.BooleanField(default=False)
 
     class Meta:
