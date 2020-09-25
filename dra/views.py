@@ -69,7 +69,7 @@ def token(request):
                         }
                         ]
 
-                logger.info("Account=%s Repo=%s: permissions granted: pull=%s pull=%s",
+                logger.info("Account=%s Repo=%s: permissions granted: pull=%s push=%s",
                     account, repo, pull, push)
 
     response = HttpResponse()
