@@ -1,6 +1,8 @@
 import base64
 import json
 import socket
+import logging
+import sys
 from django.test import TestCase
 from dra import models
 from django.test import Client
@@ -24,6 +26,8 @@ class AuthTest(TestCase):
         pass
 
     def setUp(self):
+        logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+
         ro_group = models.Group.objects.create(name='ro_group')
         admin_group = models.Group.objects.create(name='admin')
         u1 = models.Account(username=ADMIN_USERNAME)
@@ -38,9 +42,17 @@ class AuthTest(TestCase):
         pub_repo = models.Repository.objects.create(name='public', public=True)
         priv_repo = models.Repository.objects.create(name='private')
 
+        org_repo = models.Repository.objects.create(name='org')
+        models.Repository.objects.create(name='org/public', public=True)
+        org_pub_priv_repo = models.Repository.objects.create(name='org/public/private')
+
         models.RepositoryPermissions.objects.create(repository=pub_repo, group=ro_group, write=False)
         models.RepositoryPermissions.objects.create(repository=pub_repo, group=admin_group, write=True)
         models.RepositoryPermissions.objects.create(repository=priv_repo, group=admin_group, write=True)
+
+        models.RepositoryPermissions.objects.create(repository=org_repo, group=admin_group, write=True)
+
+        models.RepositoryPermissions.objects.create(repository=org_pub_priv_repo, group=ro_group, write=False)
 
     def request(self, service=SERVICE, scope='registry:*', username=None, password=None):
         c = Client()
@@ -122,4 +134,38 @@ class AuthTest(TestCase):
         actions = self._repo_actions(username=RO_USERNAME, password=RO_PASSWORD, repository='private')
 
         self.assertNotIn('pull', actions)
+        self.assertNotIn('push', actions)
+
+    def test_recursive_ro_no_access(self):
+        actions = self._repo_actions(username=RO_USERNAME, password=RO_PASSWORD, repository='private/repo1')
+
+        self.assertNotIn('pull', actions)
+        self.assertNotIn('push', actions)
+
+        actions = self._repo_actions(username=RO_USERNAME, password=RO_PASSWORD, repository='private/repo2/sub')
+
+        self.assertNotIn('pull', actions)
+        self.assertNotIn('push', actions)
+
+    def test_recursive_ro_access(self):
+        actions = self._repo_actions(username=RO_USERNAME, password=RO_PASSWORD, repository='public/repo1')
+
+        self.assertIn('pull', actions)
+        self.assertNotIn('push', actions)
+
+        actions = self._repo_actions(username=RO_USERNAME, password=RO_PASSWORD, repository='public/repo2/sub')
+
+        self.assertIn('pull', actions)
+        self.assertNotIn('push', actions)
+
+    def test_org_public(self):
+        actions = self._repo_actions(username=RO_USERNAME, password=RO_PASSWORD, repository='org/public/private')
+
+        self.assertNotIn('pull', actions)
+        self.assertNotIn('push', actions)
+
+    def test_admin_priv_no_access(self):
+        actions = self._repo_actions(username=ADMIN_USERNAME, password=ADMIN_PASSWORD, repository='org/public/private')
+
+        self.assertIn('pull', actions)
         self.assertNotIn('push', actions)

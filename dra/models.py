@@ -29,7 +29,7 @@ class Account(models.Model):
         return '{}'.format(self.username)
 
 class Repository(models.Model):
-    """ Represents a single repository """
+    """ Represents a repository prefix """
     name = models.CharField(max_length=100)
     public = models.BooleanField(default=False)
 
