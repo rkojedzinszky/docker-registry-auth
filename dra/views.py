@@ -3,12 +3,15 @@ import socket
 import json
 import time
 import jwt
+import logging
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.conf import settings
 from dra.models import Account
 from dra.util import PrivateKey
 from dra.auth import get_account_repository_permissions
+
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 
@@ -62,6 +65,9 @@ def token(request):
                             'actions': actions
                         }
                         ]
+
+                logger.info("Account=%s Repo=%s: permissions granted: pull=%s pull=%s",
+                    account, repo, pull, push)
 
     response = HttpResponse()
     response['Content-type'] = 'application/json'

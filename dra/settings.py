@@ -3,7 +3,9 @@ Django settings for dra project.
 """
 
 import os
+import sys
 import socket
+import logging
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -113,6 +115,27 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 RSA_KEY = os.getenv('RSA_KEY', '/data/key.pem')
 
 DRA_ISS = os.getenv('DRA_ISS', socket.getfqdn())
+
+# Default logging: info and higher messages to stderr
+LOGGING = {
+    'version': 1,
+    'formatters': {
+        'default': {
+            'format': "%(asctime)s %(levelname)s:%(name)s:%(message)s",
+        },
+    },
+    'handlers': {
+        'default': {
+            'class': 'logging.StreamHandler',  # sys.stderr is default output
+            'stream': sys.stdout,
+            'formatter': 'default',
+        },
+    },
+    'root': {
+        'level': logging.INFO,
+        'handlers': ['default'],
+    },
+}
 
 try:
     from local_settings import *
