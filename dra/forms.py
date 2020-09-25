@@ -5,7 +5,8 @@ class AccountForm(ModelForm):
     npassword = CharField(max_length=100, label='New password', required=False, widget=PasswordInput)
 
     class Meta:
-        fields = ('username', 'npassword', 'groups')
+        fields = ('username', 'npassword', 'groups', 'requests')
+        readonly = ('requests',)
         model = Account
 
     def save(self, commit=True):

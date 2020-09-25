@@ -7,6 +7,7 @@ import logging
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.conf import settings
+from django.db.models import F
 from dra.models import Account
 from dra.util import PrivateKey
 from dra.auth import get_account_repository_permissions
@@ -31,6 +32,8 @@ def token(request):
     account = Account.objects.filter(username=user).first()
     if account is None or not account.check_password(password):
         return HttpResponse(status=403)
+
+    Account.objects.filter(pk=account.pk).update(requests=F('requests') + 1)
 
     service = request.GET['service']
     now = int(time.time())

@@ -18,6 +18,7 @@ class Account(models.Model):
     username = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=128)
     groups = models.ManyToManyField(Group, blank=True)
+    requests = models.BigIntegerField(default=0)
 
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
@@ -32,6 +33,7 @@ class Repository(models.Model):
     """ Represents a repository prefix """
     name = models.CharField(max_length=100, unique=True)
     public = models.BooleanField(default=False)
+    requests = models.BigIntegerField(default=0)
 
     class Meta:
         verbose_name_plural = 'Repositories'
@@ -46,6 +48,7 @@ class RepositoryPermissions(models.Model):
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     write = models.BooleanField(default=False)
+    requests = models.BigIntegerField(default=0)
 
     class Meta:
         unique_together = (
