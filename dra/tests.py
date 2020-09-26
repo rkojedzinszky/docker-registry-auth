@@ -26,7 +26,7 @@ class AuthTest(TestCase):
         pass
 
     def setUp(self):
-        logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+        logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
         ro_group = models.Group.objects.create(name='ro_group')
         admin_group = models.Group.objects.create(name='admin')
@@ -53,6 +53,15 @@ class AuthTest(TestCase):
         models.RepositoryPermissions.objects.create(repository=org_repo, group=admin_group, write=True)
 
         models.RepositoryPermissions.objects.create(repository=org_pub_priv_repo, group=ro_group, write=False)
+
+        client_group = models.Group.objects.create(name="client_group")
+        models.RepositoryPermissions.objects.create(repository=org_repo, group=client_group)
+
+        client_user = models.Account(username="client")
+        client_user.set_password('client')
+        client_user.save()
+
+        client_user.groups.set([client_group])
 
     def request(self, service=SERVICE, scope='registry:*', username=None, password=None):
         c = Client()
@@ -166,6 +175,19 @@ class AuthTest(TestCase):
 
     def test_admin_priv_no_access(self):
         actions = self._repo_actions(username=ADMIN_USERNAME, password=ADMIN_PASSWORD, repository='org/public/private')
+
+        self.assertIn('pull', actions)
+        self.assertNotIn('push', actions)
+
+    def test_priv_inherited_access(self):
+        # Test permission inheritance, i.e. if a permission grant exists,
+        # then all its descendants inherit that.
+        actions = self._repo_actions(username='client', password='client', repository='org')
+
+        self.assertIn('pull', actions)
+        self.assertNotIn('push', actions)
+
+        actions = self._repo_actions(username='client', password='client', repository='org/private/public')
 
         self.assertIn('pull', actions)
         self.assertNotIn('push', actions)
