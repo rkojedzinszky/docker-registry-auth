@@ -46,6 +46,7 @@ def get_account_repository_permissions(account, repository: str):
     """ This calculates pull,push rights for a user to a repository """
 
     # Pull rights
+    longest: Repository = None
     pull: bool = None
     push = False
 
@@ -57,7 +58,9 @@ def get_account_repository_permissions(account, repository: str):
         repo = Repository.objects.filter(name=reponame).first()
 
         if repo is not None:
-            Repository.objects.filter(pk=repo.pk).update(requests=F('requests') + 1)
+            # Remember longest repo definition
+            if longest is None:
+                longest = repo
 
             perms = repo.repositorypermissions_set.filter(group__account=account)
             if perms.exists():
@@ -71,6 +74,10 @@ def get_account_repository_permissions(account, repository: str):
                 pull = repo.public
 
         repository.pop()
+
+    # Update request counter only for longest repo match
+    if longest:
+        Repository.objects.filter(pk=longest.pk).update(requests=F('requests') + 1)
 
     pull = pull is True
 
