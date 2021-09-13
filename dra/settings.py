@@ -152,3 +152,5 @@ if len(sys.argv) > 1 and sys.argv[1] == 'test':
 
 del socket
 del sys
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
