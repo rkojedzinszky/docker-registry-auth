@@ -1,10 +1,8 @@
 import base64
-import socket
 import json
 import time
 import jwt
 import logging
-from django.shortcuts import render
 from django.http import HttpResponse
 from django.conf import settings
 from django.db.models import F
@@ -15,6 +13,7 @@ from dra.auth import get_account_repository_permissions
 logger = logging.getLogger(__name__)
 
 # Create your views here.
+
 
 def token(request):
     """ This view authenticates and issues tokens """
@@ -39,14 +38,14 @@ def token(request):
     now = int(time.time())
 
     resp = {
-            'iss': settings.DRA_ISS,
-            'sub': account.username,
-            'aud': service,
-            'exp': now + 60,
-            'nbf': now,
-            'iat': now,
-            'jti': '1',
-            }
+        'iss': settings.DRA_ISS,
+        'sub': account.username,
+        'aud': service,
+        'exp': now + 60,
+        'nbf': now,
+        'iat': now,
+        'jti': '1',
+    }
 
     scope = request.GET.get('scope', None)
     if scope is not None:
@@ -62,15 +61,15 @@ def token(request):
                     actions.append('push')
 
                 resp['access'] = [
-                        {
-                            'type': typ,
-                            'name': repo,
-                            'actions': actions
-                        }
-                        ]
+                    {
+                        'type': typ,
+                        'name': repo,
+                        'actions': actions
+                    }
+                ]
 
                 logger.info("Account=%s Repo=%s: permissions granted: pull=%s push=%s",
-                    account, repo, pull, push)
+                            account, repo, pull, push)
 
     response = HttpResponse()
     response['Content-type'] = 'application/json'
@@ -82,8 +81,8 @@ def token(request):
             resp,
             key.key,
             algorithm='RS512',
-            headers={'kid':key.public_key_kid},
-            ).decode()
-        }))
+            headers={'kid': key.public_key_kid},
+        )
+    }))
 
     return response
