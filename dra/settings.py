@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_atomic_migrations.AtomicMigrations',
-    'django_dbconn_retry',
     'dra',
 ]
 
@@ -79,9 +78,6 @@ DATABASES = {
         'PORT': os.getenv('DBPORT', '5432'),
         'USER': os.getenv('DBUSER', 'dra'),
         'PASSWORD': os.getenv('DBPASSWORD', 'dra'),
-        #'SCHEMA': '',
-
-        'CONN_MAX_AGE': None if os.getenv('DBCONNMAXAGE') == '' else int(os.getenv('DBCONNMAXAGE', '0')),
     }
 }
 
@@ -142,7 +138,6 @@ try:
 except ImportError:
     pass
 
-import sys
 
 if len(sys.argv) > 1 and sys.argv[1] == 'test':
     import tempfile

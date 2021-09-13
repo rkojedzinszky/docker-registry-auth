@@ -2,5 +2,4 @@ django<3.3
 pyjwt>=2
 cryptography
 django-atomic-migrations
-django-dbconn-retry
 psycopg2
