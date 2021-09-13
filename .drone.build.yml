@@ -1,3 +1,4 @@
+---
 kind: pipeline
 name: build
 type: kubernetes
@@ -29,3 +30,6 @@ steps:
 volumes:
   - name: docker
     temp: {}
+
+depends_on:
+  - integration tests
