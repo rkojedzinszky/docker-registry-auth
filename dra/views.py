@@ -12,7 +12,7 @@ from dra.auth import get_account_repository_permissions
 
 logger = logging.getLogger(__name__)
 
-# Create your views here.
+TOKEN_LIFETIME = 300
 
 
 def token(request):
@@ -41,7 +41,7 @@ def token(request):
         'iss': settings.DRA_ISS,
         'sub': account.username,
         'aud': service,
-        'exp': now + 60,
+        'exp': now + TOKEN_LIFETIME,
         'nbf': now,
         'iat': now,
         'jti': '1',
@@ -82,7 +82,8 @@ def token(request):
             key.key,
             algorithm='RS512',
             headers={'kid': key.public_key_kid},
-        )
+        ),
+        'expires_in': TOKEN_LIFETIME,
     }))
 
     return response
