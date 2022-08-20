@@ -9,13 +9,6 @@ https://docs.djangoproject.com/en/1.10/howto/deployment/wsgi/
 
 import os
 
-# re-open sys.stdout to really correspont to FD #1
-# Under uwsgi stdout and stderr are all mapped to FD #2
-import sys
-
-sys.stdout = open(1, 'w')
-sys.__stdout__ = sys.stdout
-
 from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dra.settings")
