@@ -1,13 +1,13 @@
-FROM alpine:3.14
+FROM alpine:3.16
 
 LABEL org.opencontainers.image.authors "Richard Kojedzinszky <richard@kojedz.in>"
 LABEL org.opencontainers.image.source https://github.com/rkojedzinszky/docker-registry-auth
 
 ENV APP_USER=docker-registry-auth \
-    APP_HOME=/opt/docker-registry-auth
+	APP_HOME=/opt/docker-registry-auth
 
 RUN apk add --no-cache python3 py3-pip openssl supervisor nginx py3-psycopg2 uwsgi-python3 \
-        py3-cryptography && \
+	py3-cryptography && \
 	mkdir -p /data $APP_HOME && \
 	adduser -u 17490 -D -H -h $APP_HOME $APP_USER && \
 	chown -R $APP_USER /var/lib/nginx /var/log/nginx
