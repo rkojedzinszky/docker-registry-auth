@@ -6,6 +6,7 @@ import logging
 from django.http import HttpResponse
 from django.conf import settings
 from django.db.models import F
+from django.views.decorators.csrf import csrf_exempt
 from dra.models import Account
 from dra.util import PrivateKey
 from dra.auth import get_account_repository_permissions
@@ -15,8 +16,12 @@ logger = logging.getLogger(__name__)
 TOKEN_LIFETIME = 300
 
 
+@csrf_exempt
 def token(request):
     """ This view authenticates and issues tokens """
+
+    if request.method != 'GET':
+        return HttpResponse(status=404)
 
     auth = request.META.get('HTTP_AUTHORIZATION', None)
     if auth is None:
