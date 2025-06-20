@@ -15,17 +15,17 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:13
+        image: postgres:15
         env:
           POSTGRES_USER: dra
           POSTGRES_PASSWORD: dra
 
-    container: alpine:3.16
+    container: ghcr.io/euronetzrt/django:3.22.0
     steps:
       - uses: actions/checkout@v3
 
       - name: Install alpine packages
-        run: apk add --no-cache python3 py3-pip openssl supervisor nginx py3-psycopg2 uwsgi-python3 py3-cryptography
+        run: apk add --no-cache openssl supervisor nginx py3-cryptography
 
       - name: Install python dependencies
         run: pip3 install -r requirements.txt

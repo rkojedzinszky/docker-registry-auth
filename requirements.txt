@@ -1,5 +1,5 @@
-django<4
+django<6
 pyjwt>=2
 cryptography
 django-atomic-migrations
-psycopg2
+psycopg[pool]
