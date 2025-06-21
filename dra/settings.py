@@ -78,12 +78,6 @@ DATABASES = {
         'PORT': os.getenv('DBPORT', '5432'),
         'USER': os.getenv('DBUSER', 'dra'),
         'PASSWORD': os.getenv('DBPASSWORD', 'dra'),
-        'OPTIONS': {
-            'pool': {
-                'min_size': 0,
-                'max_size': 4,
-            },
-        },
     }
 }
 
