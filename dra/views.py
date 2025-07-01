@@ -50,10 +50,10 @@ def token(request):
         'nbf': now,
         'iat': now,
         'jti': '1',
+        'access': [],
     }
 
-    scope = request.GET.get('scope', None)
-    if scope is not None:
+    for scope in request.GET.getlist('scope'):
         ss = scope.split(':')
         if len(ss) == 3:
             typ, repo, _ = ss
@@ -65,13 +65,13 @@ def token(request):
                 if push:
                     actions.append('push')
 
-                resp['access'] = [
+                resp['access'].append(
                     {
                         'type': typ,
                         'name': repo,
                         'actions': actions
                     }
-                ]
+                )
 
                 logger.info("Account=%s Repo=%s: permissions granted: pull=%s push=%s",
                             account, repo, pull, push)
