@@ -65,13 +65,11 @@ def token(request):
                 if push:
                     actions.append('push')
 
-                resp['access'].append(
-                    {
-                        'type': typ,
-                        'name': repo,
-                        'actions': actions
-                    }
-                )
+                resp['access'].append({
+                    'type': typ,
+                    'name': repo,
+                    'actions': actions,
+                })
 
                 logger.info("Account=%s Repo=%s: permissions granted: pull=%s push=%s",
                             account, repo, pull, push)
